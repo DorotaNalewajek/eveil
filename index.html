@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Éveil">
+<meta name="theme-color" content="#A09086">
+<title>Éveil — One Hour. Real Change.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --clay: #A09086;
+    --clay-dark: #8a7870;
+    --cream: #FFFAF2;
+    --blush: #EFD7CF;
+    --rose: #C87D87;
+    --thyme: #6B7556;
+    --wheat: #DFC49B;
+    --dark: #2C1F1A;
+    --text-dark: #3A2E2A;
+    --text-mid: #7A6A64;
+    --text-light: #B5A49E;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--clay);
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .screen.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ─── SPLASH ─── */
+  #splash {
+    background: var(--clay);
+    padding: 2rem;
+  }
+
+  .splash-orbital {
+    position: relative;
+    width: 260px;
+    height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .splash-orbital svg {
+    position: absolute;
+    inset: 0;
+  }
+
+  .splash-center {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .splash-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 2.8rem;
+    font-weight: 300;
+    color: var(--cream);
+    letter-spacing: 0.03em;
+    line-height: 1;
+  }
+
+  .splash-tagline {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,250,242,0.35);
+    margin-top: 8px;
+  }
+
+  .splash-intention {
+    background: rgba(255,250,242,0.12);
+    border: 0.5px solid rgba(255,250,242,0.2);
+    border-radius: 16px;
+    padding: 0.9rem 1.4rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .splash-intention-label {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,250,242,0.4);
+    margin-bottom: 6px;
+  }
+
+  .splash-intention-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--cream);
+    line-height: 1.4;
+  }
+
+  .splash-bottom {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .splash-date {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,250,242,0.3);
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--wheat);
+    color: #6B4C3B;
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  .btn-primary:active { transform: scale(0.98); opacity: 0.85; }
+
+  /* ─── TRANSITION ─── */
+  #transition {
+    background: var(--clay);
+    text-align: center;
+    padding: 3rem 2rem;
+  }
+
+  .transition-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 3rem;
+  }
+
+  .transition-text p {
+    font-size: 1.4rem;
+    line-height: 2;
+  }
+
+  .transition-text p:first-child {
+    font-size: 1.6rem;
+    font-style: italic;
+    color: var(--wheat);
+    margin-bottom: 0.5rem;
+  }
+
+  .transition-text .small {
+    font-size: 0.9rem;
+    color: rgba(255,250,242,0.5);
+    letter-spacing: 0.08em;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid rgba(255,250,242,0.3);
+    border-radius: 50px;
+    padding: 0.9rem 2.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-ghost:active { background: rgba(255,250,242,0.1); }
+
+  /* ─── TIMER ─── */
+  #timer {
+    background: #1E1410;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .timer-display {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    color: var(--cream);
+    font-size: clamp(5rem, 20vw, 7rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .timer-colon {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.15; }
+  }
+
+  .timer-message {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(255,250,242,0.35);
+    letter-spacing: 0.08em;
+    margin-bottom: 4rem;
+  }
+
+  .timer-messages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 3rem;
+  }
+
+  .timer-msg-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: rgba(255,250,242,0.2);
+    transition: color 0.5s;
+  }
+
+  .timer-msg-item.visible {
+    color: rgba(255,250,242,0.5);
+  }
+
+  .btn-stop {
+    background: transparent;
+    border: none;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,250,242,0.2);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    padding: 0.5rem;
+    transition: color 0.2s;
+  }
+
+  .btn-stop:active { color: rgba(255,250,242,0.5); }
+
+  /* ─── REFLECTION ─── */
+  #reflection {
+    background: var(--blush);
+    padding: 2rem;
+    justify-content: flex-start;
+    padding-top: 4rem;
+  }
+
+  .reflection-top {
+    text-align: center;
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+
+  .reflection-done {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--thyme);
+    margin-bottom: 0.5rem;
+  }
+
+  .reflection-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--text-dark);
+    line-height: 1.2;
+  }
+
+  .reflection-title em {
+    font-style: italic;
+    color: var(--rose);
+  }
+
+  .reflection-card {
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 1.2rem 1.4rem;
+    margin-bottom: 1.2rem;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .reflection-card-label {
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 8px;
+  }
+
+  .reflection-card-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  .reflection-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 340px;
+    margin-bottom: 1.5rem;
+  }
+
+  .opt-btn {
+    background: var(--cream);
+    border: 1px solid rgba(200,125,135,0.2);
+    border-radius: 50px;
+    padding: 0.75rem 1.2rem;
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .opt-btn.selected {
+    background: var(--rose);
+    color: white;
+    border-color: var(--rose);
+  }
+
+  .opt-btn:active { transform: scale(0.98); }
+
+  .btn-close {
+    width: 100%;
+    max-width: 340px;
+    background: var(--text-dark);
+    color: var(--cream);
+    border: none;
+    border-radius: 50px;
+    padding: 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-close:active { opacity: 0.8; }
+
+  /* ─── DONE ─── */
+  #done {
+    background: var(--clay);
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .done-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem;
+    font-weight: 300;
+    color: var(--wheat);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .done-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,250,242,0.4);
+    margin-bottom: 2rem;
+  }
+
+  .done-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--cream);
+    line-height: 1.6;
+    max-width: 280px;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+
+  .done-text em {
+    color: var(--wheat);
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .screen.active > * {
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  .screen.active > *:nth-child(1) { animation-delay: 0.05s; opacity: 0; }
+  .screen.active > *:nth-child(2) { animation-delay: 0.15s; opacity: 0; }
+  .screen.active > *:nth-child(3) { animation-delay: 0.25s; opacity: 0; }
+  .screen.active > *:nth-child(4) { animation-delay: 0.35s; opacity: 0; }
+  .screen.active > *:nth-child(5) { animation-delay: 0.45s; opacity: 0; }
+</style>
+</head>
+<body>
+
+<!-- ─── SPLASH ─── -->
+<div class="screen active" id="splash">
+  <div class="splash-orbital">
+    <svg width="260" height="260" viewBox="0 0 260 260">
+      <circle cx="130" cy="130" r="120" fill="none" stroke="rgba(255,250,242,0.07)" stroke-width="1"/>
+      <circle cx="130" cy="130" r="90" fill="none" stroke="rgba(255,250,242,0.1)" stroke-width="0.5"/>
+      <circle cx="130" cy="130" r="60" fill="none" stroke="rgba(223,196,155,0.12)" stroke-width="0.5"/>
+      <line x1="130" y1="10" x2="130" y2="24" stroke="rgba(255,250,242,0.18)" stroke-width="1"/>
+      <line x1="130" y1="236" x2="130" y2="250" stroke="rgba(255,250,242,0.18)" stroke-width="1"/>
+      <line x1="10" y1="130" x2="24" y2="130" stroke="rgba(255,250,242,0.18)" stroke-width="1"/>
+      <line x1="236" y1="130" x2="250" y2="130" stroke="rgba(255,250,242,0.18)" stroke-width="1"/>
+      <line x1="37" y1="37" x2="47" y2="47" stroke="rgba(255,250,242,0.1)" stroke-width="0.8"/>
+      <line x1="213" y1="37" x2="203" y2="47" stroke="rgba(255,250,242,0.1)" stroke-width="0.8"/>
+      <line x1="37" y1="213" x2="47" y2="203" stroke="rgba(255,250,242,0.1)" stroke-width="0.8"/>
+      <line x1="213" y1="213" x2="203" y2="203" stroke="rgba(255,250,242,0.1)" stroke-width="0.8"/>
+      <circle id="p1" cx="250" cy="130" r="8" fill="#EFD7CF" opacity="0.85"/>
+      <circle id="p2" cx="130" cy="40" r="6" fill="#DFC49B" opacity="0.8"/>
+      <circle id="p3" cx="185" cy="185" r="5" fill="rgba(255,250,242,0.5)"/>
+    </svg>
+    <div class="splash-center">
+      <div class="splash-logo">Éveil</div>
+      <div class="splash-tagline">one hour · real change</div>
+    </div>
+  </div>
+
+  <div class="splash-intention">
+    <div class="splash-intention-label">Today's intention</div>
+    <div class="splash-intention-text" id="intentionDisplay">"What will your hour become today?"</div>
+  </div>
+
+  <div class="splash-bottom">
+    <div class="splash-date" id="todayDate"></div>
+    <button class="btn-primary" onclick="goTo('transition')">Enter your Éveil →</button>
+  </div>
+</div>
+
+<!-- ─── TRANSITION ─── -->
+<div class="screen" id="transition">
+  <div class="transition-text">
+    <p>Take a breath.</p>
+    <p>This hour is yours.</p>
+    <p class="small">No noise. No scrolling. No distractions.</p>
+  </div>
+  <button class="btn-ghost" onclick="startTimer()">Begin →</button>
+</div>
+
+<!-- ─── TIMER ─── -->
+<div class="screen" id="timer">
+  <div class="timer-display">
+    <span id="timerMin">60</span><span class="timer-colon">:</span><span id="timerSec">00</span>
+  </div>
+  <div class="timer-messages">
+    <div class="timer-msg-item" id="msg1">You're doing the work.</div>
+    <div class="timer-msg-item" id="msg2">Stay with it.</div>
+    <div class="timer-msg-item" id="msg3">This is your hour.</div>
+  </div>
+  <button class="btn-stop" onclick="goTo('reflection')">I'm done for today</button>
+</div>
+
+<!-- ─── REFLECTION ─── -->
+<div class="screen" id="reflection">
+  <div class="reflection-top">
+    <div class="reflection-done">✦ You showed up today</div>
+    <div class="reflection-title">How did it <em>feel?</em></div>
+  </div>
+
+  <div class="reflection-card">
+    <div class="reflection-card-label">Carrie moment</div>
+    <div class="reflection-card-text" id="carrieQuestion">"I couldn't help but wonder — what changes when you stop scrolling and start building?"</div>
+  </div>
+
+  <div class="reflection-options">
+    <button class="opt-btn" onclick="selectOpt(this)">Focused and proud ✦</button>
+    <button class="opt-btn" onclick="selectOpt(this)">Hard but worth it</button>
+    <button class="opt-btn" onclick="selectOpt(this)">Distracted, but I stayed</button>
+  </div>
+
+  <button class="btn-close" onclick="finishSession()">Close your Éveil →</button>
+</div>
+
+<!-- ─── DONE ─── -->
+<div class="screen" id="done">
+  <div class="done-number" id="doneDay">19</div>
+  <div class="done-label">days consistent</div>
+  <div class="done-text">
+    "Every day you show up,<br>you become someone<br><em>your future self</em><br>will thank."
+  </div>
+  <button class="btn-primary" onclick="goTo('splash')" style="max-width:300px;">See you tomorrow →</button>
+</div>
+
+<script>
+const intentions = [
+  '"What will your hour become today?"',
+  '"The work doesn\'t start when you\'re ready. It starts when you begin."',
+  '"One hour. One direction. One version of you becoming real."',
+  '"Your future self is watching. Make her proud."',
+  '"Small steps, taken daily, build extraordinary lives."'
+];
+
+const carrieQuestions = [
+  '"I couldn\'t help but wonder — what changes when you stop scrolling and start building?"',
+  '"Are you avoiding the work — or the fear of what happens if it actually works?"',
+  '"What would your life look like in 90 days if you stayed consistent?"',
+  '"Is one hour a day too much to ask for the life you want?"',
+  '"The hardest part isn\'t starting. It\'s staying."'
+];
+
+let timerInterval = null;
+let seconds = 3600;
+let msgTimer = null;
+
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+  });
+  setTimeout(() => {
+    document.getElementById(id).classList.add('active');
+  }, 50);
+}
+
+function startTimer() {
+  goTo('timer');
+  seconds = 3600;
+  updateTimerDisplay();
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    seconds--;
+    if (seconds <= 0) {
+      clearInterval(timerInterval);
+      goTo('reflection');
+    }
+    updateTimerDisplay();
+    updateMessages();
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  document.getElementById('timerMin').textContent = String(m).padStart(2, '0');
+  document.getElementById('timerSec').textContent = String(s).padStart(2, '0');
+}
+
+function updateMessages() {
+  const elapsed = 3600 - seconds;
+  document.getElementById('msg1').classList.toggle('visible', elapsed > 30);
+  document.getElementById('msg2').classList.toggle('visible', elapsed > 300);
+  document.getElementById('msg3').classList.toggle('visible', elapsed > 900);
+}
+
+function selectOpt(btn) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function finishSession() {
+  clearInterval(timerInterval);
+  const day = parseInt(localStorage.getItem('eveil_day') || '0') + 1;
+  localStorage.setItem('eveil_day', day);
+  document.getElementById('doneDay').textContent = day;
+  goTo('done');
+}
+
+function setDate() {
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('todayDate').textContent =
+    `${days[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}`;
+}
+
+function setRandomContent() {
+  const ri = Math.floor(Math.random() * intentions.length);
+  const rq = Math.floor(Math.random() * carrieQuestions.length);
+  document.getElementById('intentionDisplay').textContent = intentions[ri];
+  document.getElementById('carrieQuestion').textContent = carrieQuestions[rq];
+}
+
+function animateOrbits() {
+  let a1 = 0, a2 = 90, a3 = 210;
+  function frame() {
+    a1 += 0.3; a2 += 0.2; a3 += 0.12;
+    const cx = 130, cy = 130;
+    const p1 = document.getElementById('p1');
+    const p2 = document.getElementById('p2');
+    const p3 = document.getElementById('p3');
+    if (p1) {
+      p1.setAttribute('cx', cx + 120 * Math.cos(a1 * Math.PI / 180));
+      p1.setAttribute('cy', cy + 120 * Math.sin(a1 * Math.PI / 180));
+    }
+    if (p2) {
+      p2.setAttribute('cx', cx + 90 * Math.cos(a2 * Math.PI / 180));
+      p2.setAttribute('cy', cy + 90 * Math.sin(a2 * Math.PI / 180));
+    }
+    if (p3) {
+      p3.setAttribute('cx', cx + 75 * Math.cos(a3 * Math.PI / 180));
+      p3.setAttribute('cy', cy + 75 * Math.sin(a3 * Math.PI / 180));
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+setDate();
+setRandomContent();
+animateOrbits();
+</script>
+</body>
+</html>
