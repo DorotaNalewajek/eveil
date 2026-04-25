@@ -853,7 +853,40 @@ function animateOrbits() {
   }
   frame();
 }
+let authMode = 'register';
 
+function enterEveil() {
+  const hasUser = localStorage.getItem('eveil_user');
+  goTo(hasUser ? 'transition' : 'auth');
+}
+
+function switchAuthMode(mode) {
+  authMode = mode;
+
+  const isRegister = mode === 'register';
+
+  document.getElementById('registerToggle').classList.toggle('active', isRegister);
+  document.getElementById('loginToggle').classList.toggle('active', !isRegister);
+
+  document.getElementById('nameField').style.display = isRegister ? 'block' : 'none';
+
+  document.getElementById('authTitle').textContent = isRegister
+    ? 'Begin with one hour.'
+    : 'Welcome back to your hour.';
+
+  document.getElementById('authSubtitle').textContent = isRegister
+    ? 'Commencez par une heure.'
+    : 'Vous êtes revenue à vous-même.';
+
+  document.getElementById('authButton').textContent = isRegister
+    ? 'Begin my journey →'
+    : 'Enter your Éveil →';
+}
+
+function continueFromAuth() {
+  localStorage.setItem('eveil_user', 'true');
+  goTo('transition');
+}
 setDate();
 setRandomContent();
 animateOrbits();
