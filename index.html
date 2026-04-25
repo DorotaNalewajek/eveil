@@ -157,7 +157,153 @@
   }
 
   .btn-primary:active { transform: scale(0.98); opacity: 0.85; }
+/* ─── AUTH ─── */
+#auth {
+  background: var(--clay);
+  padding: 2rem;
+}
 
+.auth-card {
+  width: 100%;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.auth-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 2.6rem;
+  font-weight: 300;
+  color: var(--cream);
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.auth-tagline {
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,250,242,0.32);
+  text-align: center;
+  margin-top: 6px;
+  margin-bottom: 1.6rem;
+}
+
+.auth-toggle {
+  display: flex;
+  gap: 8px;
+  background: rgba(255,250,242,0.08);
+  border: 1px solid rgba(255,250,242,0.14);
+  border-radius: 999px;
+  padding: 5px;
+  margin-bottom: 1.8rem;
+}
+
+.auth-toggle-btn {
+  flex: 1;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255,250,242,0.45);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  padding: 0.7rem 0.5rem;
+  cursor: pointer;
+}
+
+.auth-toggle-btn.active {
+  background: var(--wheat);
+  color: #6B4C3B;
+}
+
+.auth-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.75rem;
+  font-weight: 300;
+  color: var(--cream);
+  text-align: center;
+  margin-bottom: 0.35rem;
+}
+
+.auth-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: rgba(255,250,242,0.35);
+  text-align: center;
+  margin-bottom: 1.6rem;
+}
+
+.auth-field {
+  background: rgba(255,250,242,0.08);
+  border: 1px solid rgba(255,250,242,0.18);
+  border-radius: 14px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.auth-field label {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  color: rgba(255,250,242,0.4);
+  margin-bottom: 0.35rem;
+}
+
+.auth-field input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+}
+
+.auth-field input::placeholder {
+  color: rgba(255,250,242,0.35);
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 1.2rem 0 0.9rem;
+}
+
+.auth-divider span {
+  height: 1px;
+  flex: 1;
+  background: rgba(255,250,242,0.12);
+}
+
+.auth-divider p {
+  font-size: 9px;
+  color: rgba(255,250,242,0.25);
+}
+
+.auth-social {
+  width: 100%;
+  height: 46px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(255,250,242,0.18);
+  color: rgba(255,250,242,0.55);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  margin-bottom: 0.7rem;
+  cursor: pointer;
+}
+
+.auth-privacy {
+  font-size: 7.5px;
+  color: rgba(255,250,242,0.16);
+  text-align: center;
+  margin-top: 1rem;
+}
   /* ─── TRANSITION ─── */
   #transition {
     background: var(--clay);
@@ -474,10 +620,52 @@
 
   <div class="splash-bottom">
     <div class="splash-date" id="todayDate"></div>
-    <button class="btn-primary" onclick="goTo('transition')">Enter your Éveil →</button>
+    <button class="btn-primary" onclick="enterEveil()">Enter your Éveil →</button>
   </div>
 </div>
+<!-- ─── AUTH ─── -->
+<div class="screen" id="auth">
+  <div class="auth-card">
+    <div class="auth-logo">Éveil</div>
+    <div class="auth-tagline">one hour · real change</div>
 
+    <div class="auth-toggle">
+      <button class="auth-toggle-btn active" id="registerToggle" onclick="switchAuthMode('register')">Create account</button>
+      <button class="auth-toggle-btn" id="loginToggle" onclick="switchAuthMode('login')">Sign in</button>
+    </div>
+
+    <h1 class="auth-title" id="authTitle">Begin with one hour.</h1>
+    <p class="auth-subtitle" id="authSubtitle">Commencez par une heure.</p>
+
+    <div class="auth-field" id="nameField">
+      <label>NAME</label>
+      <input type="text" placeholder="Your name" />
+    </div>
+
+    <div class="auth-field">
+      <label>EMAIL</label>
+      <input type="email" placeholder="your@email.com" />
+    </div>
+
+    <div class="auth-field">
+      <label>PASSWORD</label>
+      <input type="password" placeholder="••••••••" />
+    </div>
+
+    <button class="btn-primary" onclick="continueFromAuth()" id="authButton">Begin my journey →</button>
+
+    <div class="auth-divider">
+      <span></span>
+      <p>or continue with</p>
+      <span></span>
+    </div>
+
+    <button class="auth-social">G&nbsp;&nbsp; Continue with Google</button>
+    <button class="auth-social">⌘&nbsp;&nbsp; Continue with Apple</button>
+
+    <p class="auth-privacy">By continuing you agree to our Privacy Policy</p>
+  </div>
+</div>
 <!-- ─── TRANSITION ─── -->
 <div class="screen" id="transition">
   <div class="transition-text">
