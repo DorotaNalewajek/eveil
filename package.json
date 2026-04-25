@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@clerk/clerk-react": "^5.61.6",
+    "@supabase/supabase-js": "^2.104.1",
+    "react-router-dom": "^7.14.2"
+  }
+}
