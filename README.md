@@ -10,7 +10,6 @@ It is not a classic habit tracker. Éveil helps the user intentionally protect o
 - Root domain: [https://eveil.life](https://eveil.life) redirects to `https://www.eveil.life`
 - GitHub repository: `DorotaNalewajek/eveil`
 - Production Vercel project: `eveil`
-- Duplicate/old Vercel project: `eveil-vnb9` should not be used
 
 ## Tech Stack
 
