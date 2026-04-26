@@ -20,25 +20,21 @@ function ProtectedRoute({ children }) {
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/"            element={<SplashScreen />} />
-      <Route path="/register"    element={<RegisterScreen />} />
-      <Route path="/login"       element={<LoginScreen />} />
-      <Route path="/transition"  element={<TransitionScreen />} />
-      <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback />} />
-      <Route path="/timer"       element={<ProtectedRoute><TimerScreen /></ProtectedRoute>} />
-      <Route path="/reflection"  element={<ProtectedRoute><ReflectionScreen /></ProtectedRoute>} />
-      <Route path="/done"        element={<ProtectedRoute><DoneScreen /></ProtectedRoute>} />
-      <Route path="*"            element={<Navigate to="/" replace />} />
+      <Route path="/"             element={<SplashScreen />} />
+      <Route path="/register"     element={<RegisterScreen />} />
+      <Route path="/login"        element={<LoginScreen />} />
+      <Route path="/transition"   element={<TransitionScreen />} />
+      <Route path="/sso-callback" element={CLERK_KEY ? <AuthenticateWithRedirectCallback /> : <Navigate to="/" replace />} />
+      <Route path="/timer"        element={CLERK_KEY ? <ProtectedRoute><TimerScreen /></ProtectedRoute> : <TimerScreen />} />
+      <Route path="/reflection"   element={CLERK_KEY ? <ProtectedRoute><ReflectionScreen /></ProtectedRoute> : <ReflectionScreen />} />
+      <Route path="/done"         element={CLERK_KEY ? <ProtectedRoute><DoneScreen /></ProtectedRoute> : <DoneScreen />} />
+      <Route path="*"             element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
 
 export default function App() {
-  return (
-    <ClerkProvider publishableKey={CLERK_KEY}>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </ClerkProvider>
-  )
+  const content = <BrowserRouter><AppRoutes /></BrowserRouter>
+  if (!CLERK_KEY) return content
+  return <ClerkProvider publishableKey={CLERK_KEY}>{content}</ClerkProvider>
 }
