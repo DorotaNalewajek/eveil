@@ -958,17 +958,11 @@
             password: password
           });
 
-          if (signIn.status === 'complete' || signIn.status === 'needs_first_factor') {
-            const sessionId = signIn.createdSessionId || signIn.createdSession?.id;
+          console.log("Full signIn response:", signIn);
+          console.log("Sign in status:", signIn.status);
+          console.log("Created session id:", signIn.createdSessionId);
 
-            if (sessionId) {
-              await window.clerk.setActive({
-                session: sessionId
-              });
-              localStorage.setItem('eveil_user', 'true');
-              goTo('transition');
-              return;
-            }
+          if (signIn.status === 'complete') {
             await window.clerk.setActive({
               session: signIn.createdSessionId
             });
@@ -978,9 +972,17 @@
             return;
           }
 
-          console.log("Full signIn response:", signIn);
-          console.log("Sign in status:", signIn.status);
-          console.log("Supported first factors:", signIn.supportedFirstFactors);
+          if (signIn.createdSessionId) {
+            await window.clerk.setActive({
+              session: signIn.createdSessionId
+            });
+
+            localStorage.setItem('eveil_user', 'true');
+            goTo('transition');
+            return;
+          }
+
+          console.log("Unhandled sign in:", signIn);
           alert("One more step is needed to sign in.");
           return;
         }
