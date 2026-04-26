@@ -697,7 +697,11 @@
 
       <div class="auth-field" id="nameField">
         <label>NAME</label>
-        <input type="text" placeholder="Your name" />
+        <input 
+        type="email" 
+        placeholder="your@email.com"
+        autocomplete="off"
+      />
       </div>
 
       <div class="auth-field">
@@ -707,7 +711,11 @@
 
       <div class="auth-field">
         <label>PASSWORD</label>
-        <input type="password" placeholder="••••••••" />
+        <input 
+          type="password" 
+          placeholder="••••••••"
+          autocomplete="new-password"
+        />
       </div>
 
       <button class="btn-primary" onclick="continueFromAuth()" id="authButton">Begin my journey →</button>
