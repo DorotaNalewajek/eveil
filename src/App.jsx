@@ -14,7 +14,11 @@ if (!CLERK_KEY) {
   throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY")
 }
 
-console.log("Clerk key mode:", CLERK_KEY.startsWith("pk_live_") ? "LIVE" : "NOT LIVE")
+if (import.meta.env.PROD && !CLERK_KEY.startsWith("pk_live_")) {
+  throw new Error("Production Clerk publishable key must start with pk_live_")
+}
+
+console.log("Clerk key mode:", CLERK_KEY?.startsWith("pk_live_") ? "LIVE" : "NOT LIVE")
 
 function ProtectedRoute({ children }) {
   const { isSignedIn, isLoaded } = useUser()
