@@ -3,9 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import { useSignIn } from '@clerk/clerk-react'
 
 const AUTH_ERRORS = {
-  form_password_incorrect:    'Incorrect password. Please try again.',
-  form_identifier_not_found:  'No account found with this email.',
-  form_param_format_invalid:  'Please enter a valid email address.',
+  form_password_incorrect:        'Incorrect password. Please try again.',
+  form_identifier_not_found:      'No account found with this email.',
+  form_param_format_invalid:      'Please enter a valid email address.',
+  session_exists:                 'You are already signed in.',
+  too_many_requests:              'Too many attempts. Please wait a moment.',
+  strategy_for_user_invalid:      'Use Google or Apple to sign in to this account.',
+  single_session_mode_violation:  'Please sign out before signing into another account.',
 }
 
 export default function LoginScreen() {
@@ -22,12 +26,14 @@ export default function LoginScreen() {
     setError('')
     setLoading(true)
     try {
-      const result = await signIn.create({ identifier: email, password })
+      const result = await signIn.create({ strategy: 'password', identifier: email, password })
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId })
         navigate('/transition')
+      } else if (result.status === 'needs_second_factor') {
+        setError('Two-factor authentication is not supported yet.')
       } else {
-        setError('Something went wrong. Please try again.')
+        setError('Unable to sign in. Please try again.')
       }
     } catch (err) {
       const code = err.errors?.[0]?.code

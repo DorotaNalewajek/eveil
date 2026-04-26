@@ -10,6 +10,12 @@ import DoneScreen       from './screens/DoneScreen'
 
 const CLERK_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
+if (!CLERK_KEY) {
+  throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY")
+}
+
+console.log("Clerk key mode:", CLERK_KEY.startsWith("pk_live_") ? "LIVE" : "NOT LIVE")
+
 function ProtectedRoute({ children }) {
   const { isSignedIn, isLoaded } = useUser()
   if (!isLoaded)   return null
@@ -24,10 +30,10 @@ function AppRoutes() {
       <Route path="/register"     element={<RegisterScreen />} />
       <Route path="/login"        element={<LoginScreen />} />
       <Route path="/transition"   element={<TransitionScreen />} />
-      <Route path="/sso-callback" element={CLERK_KEY ? <AuthenticateWithRedirectCallback /> : <Navigate to="/" replace />} />
-      <Route path="/timer"        element={CLERK_KEY ? <ProtectedRoute><TimerScreen /></ProtectedRoute> : <TimerScreen />} />
-      <Route path="/reflection"   element={CLERK_KEY ? <ProtectedRoute><ReflectionScreen /></ProtectedRoute> : <ReflectionScreen />} />
-      <Route path="/done"         element={CLERK_KEY ? <ProtectedRoute><DoneScreen /></ProtectedRoute> : <DoneScreen />} />
+      <Route path="/sso-callback" element={<AuthenticateWithRedirectCallback />} />
+      <Route path="/timer"        element={<ProtectedRoute><TimerScreen /></ProtectedRoute>} />
+      <Route path="/reflection"   element={<ProtectedRoute><ReflectionScreen /></ProtectedRoute>} />
+      <Route path="/done"         element={<ProtectedRoute><DoneScreen /></ProtectedRoute>} />
       <Route path="*"             element={<Navigate to="/" replace />} />
     </Routes>
   )
@@ -35,6 +41,5 @@ function AppRoutes() {
 
 export default function App() {
   const content = <BrowserRouter><AppRoutes /></BrowserRouter>
-  if (!CLERK_KEY) return content
   return <ClerkProvider publishableKey={CLERK_KEY}>{content}</ClerkProvider>
 }

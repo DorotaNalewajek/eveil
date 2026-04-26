@@ -7,6 +7,9 @@ const AUTH_ERRORS = {
   form_password_too_short:   'Password must be at least 8 characters.',
   form_password_pwned:       'This password is too common. Please choose a stronger one.',
   form_param_format_invalid: 'Please enter a valid email address.',
+  form_code_incorrect:       'Incorrect code. Please try again.',
+  verification_expired:      'Code expired. Request a new one below.',
+  verification_failed:       'Verification failed. Please try again.',
 }
 
 export default function RegisterScreen() {
@@ -15,6 +18,8 @@ export default function RegisterScreen() {
   const { signIn }                        = useSignIn()
   const [email, setEmail]                 = useState('')
   const [password, setPassword]           = useState('')
+  const [verifyCode, setVerifyCode]       = useState('')
+  const [step, setStep]                   = useState('register')
   const [error, setError]                 = useState('')
   const [loading, setLoading]             = useState(false)
 
@@ -27,15 +32,46 @@ export default function RegisterScreen() {
       const result = await signUp.create({ emailAddress: email, password })
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId })
-        navigate('/')
+        navigate('/transition')
       } else {
-        setError('Check your inbox — we sent a verification link to complete sign up.')
+        await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+        setStep('verify')
       }
     } catch (err) {
       const code = err.errors?.[0]?.code
       setError(AUTH_ERRORS[code] || 'Something went wrong. Please try again.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleVerify = async (e) => {
+    e.preventDefault()
+    if (!isLoaded) return
+    setError('')
+    setLoading(true)
+    try {
+      const result = await signUp.attemptEmailAddressVerification({ code: verifyCode })
+      if (result.status === 'complete') {
+        await setActive({ session: result.createdSessionId })
+        navigate('/transition')
+      } else {
+        setError('Verification incomplete. Please try again.')
+      }
+    } catch (err) {
+      const code = err.errors?.[0]?.code
+      setError(AUTH_ERRORS[code] || 'Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleResend = async () => {
+    setError('')
+    try {
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+    } catch {
+      setError('Could not resend code. Please try again.')
     }
   }
 
@@ -46,6 +82,50 @@ export default function RegisterScreen() {
       redirectUrl:         `${window.location.origin}/sso-callback`,
       redirectUrlComplete: '/transition',
     })
+  }
+
+  if (step === 'verify') {
+    return (
+      <div style={S.screen}>
+        <div style={S.card}>
+          <div style={S.logo}>Éveil</div>
+          <h1 style={S.title}>Check your inbox.</h1>
+          <p style={S.subtitle}>Entrez votre code.</p>
+
+          <form onSubmit={handleVerify} style={{ width: '100%' }}>
+            <div className="auth-field" style={{ textAlign: 'center' }}>
+              <label>Verification Code</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                maxLength={6}
+                value={verifyCode}
+                onChange={e => setVerifyCode(e.target.value.replace(/\D/g, ''))}
+                placeholder="000000"
+                style={S.codeInput}
+                autoFocus
+              />
+            </div>
+
+            {error && <p className="auth-error">{error}</p>}
+
+            <button
+              className="btn-primary"
+              type="submit"
+              disabled={loading || verifyCode.length < 6}
+              style={{ marginTop: '0.6rem' }}
+            >
+              {loading ? '...' : 'Verify →'}
+            </button>
+          </form>
+
+          <button className="btn-link" style={{ marginTop: '1.2rem' }} onClick={handleResend}>
+            Didn't receive it? Resend →
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -160,5 +240,11 @@ const S = {
     color: 'rgba(255,250,242,0.34)',
     textAlign: 'center',
     marginBottom: '1.8rem',
+  },
+  codeInput: {
+    fontSize: '1.5rem',
+    letterSpacing: '0.35em',
+    textAlign: 'center',
+    fontFamily: "'Cormorant Garamond', serif",
   },
 }
