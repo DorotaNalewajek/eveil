@@ -147,7 +147,7 @@ npm run preview
 
 Before deploying production:
 
-- Confirm the Vercel project is `eveil`, not `eveil-vnb9`.
+- Confirm the Vercel project is `eveil`.
 - Confirm deployment is from the `main` branch.
 - Confirm `VITE_CLERK_PUBLISHABLE_KEY` is set in Vercel Production variables.
 - Confirm the publishable Clerk key comes from the Clerk Production instance.
@@ -182,7 +182,7 @@ Check Vercel Production environment variables and confirm `VITE_CLERK_PUBLISHABL
 
 ### Changes do not appear on production
 
-Confirm the active Vercel project is `eveil`, not `eveil-vnb9`. Also confirm the deployment is built from the `main` branch.
+Confirm the active Vercel project is `eveil`.
 
 ## Security Notes
 
@@ -192,10 +192,6 @@ Confirm the active Vercel project is `eveil`, not `eveil-vnb9`. Also confirm the
 - Never commit real API keys, tokens, or secrets.
 - Keep Clerk Development and Production instances separate.
 - Use live Clerk publishable keys only for production builds.
-
-## Cleanup Note
-
-The duplicate or old Vercel project `eveil-vnb9` should be removed or clearly archived once there is no traffic, domain, or deployment dependency on it. Active production work should use only the Vercel project `eveil`.
 
 ## Future Roadmap
 
