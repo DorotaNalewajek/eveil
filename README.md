@@ -115,6 +115,12 @@ The repository is being used to explore:
 
 [eveil.life](https://eveil.life)
 
+## Deployment Notes
+
+Clerk production deployments must use the publishable key from the Clerk Production instance. In Vercel, set `VITE_CLERK_PUBLISHABLE_KEY` to the live publishable key. Keep `CLERK_SECRET_KEY` server-side only and never expose it through a `VITE_` variable.
+
+If Clerk is configured with a production custom frontend API domain, `clerk.eveil.life` must resolve using the DNS records shown in the Clerk Dashboard. If the browser reports `ERR_NAME_NOT_RESOLVED` or `failed_to_load_clerk_js` for `clerk.eveil.life`, fix DNS in the domain provider or Vercel DNS; it is not a React or Vite code issue.
+
 ## Future Ideas
 
 Potential future features may include:
